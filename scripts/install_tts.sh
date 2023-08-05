@@ -12,9 +12,12 @@ pip install torch
 pip install torchvision
 pip install matplotlib
 pip install Unidecode==1.1.1
+pip install transformers
+pip install accelerate
+pip install pydub
 
 cd monotonic_align/
 mkdir monotonic_align
-python3 setup.py build_ext
+python3 setup.py build_ext --inplace
 cd ../
 pwd
