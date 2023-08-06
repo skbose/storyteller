@@ -3,3 +3,4 @@ accelerate
 pydub
 mecab-python
 unidic-lite
+git+https://github.com/facebookresearch/audiocraft.git

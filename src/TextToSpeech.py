@@ -1,4 +1,8 @@
 from TTS.api import TTS
+import numpy as np
+from typing import List
+import scipy
+from Utils import Utils
 
 
 class TextToSpeech:
@@ -8,14 +12,53 @@ class TextToSpeech:
         '''
         self.api = TTS(model_name="tts_models/eng/fairseq/vits", gpu=True)
 
-    def generate_audio_and_save_to_file(self, text: str, output_path: str):
+    def generate_audio(self, text: str) -> np.ndarray:
+        '''
+        Generate audio for text
+        @param text: text to generate audio for
+        @return: numpy array of audio
+        '''
+        lines = text.split(".")
+        audios = []
+        for line in lines:
+            line = line.strip()
+            if line == "":
+                continue
+            print ("processing line: ", line)
+            audio = self.api.tts(text=line)
+            audios.append(audio)
+        return audios
+
+    def combined_audio_to_file(self, text: str, output_path: str):
         '''
         Generate audio for text and save to file
         @param text: text to generate audio for
         @param output_path: path to save audio file
         '''
-        self.api.tts_to_file(text, file_path=output_path)
+        audios = self.generate_audio(text)
+        # merge audios with pauses
+        PAUSE = 1.5
+        audios = [(audio, PAUSE) for audio in audios]
+        combined_audio = Utils.merge_wav_audios(audios)
+        # save audio to file using scipy
+        scipy.io.wavfile.write(output_path, self.api.synthesizer.output_sample_rate, combined_audio)
+        
         print (f"Saved to {output_path}")
+
+    def part_audios_to_files(self, text: str):
+        '''
+        Generate audio for text and save to file
+        @param text: text to generate audio for
+        @param output_path: path to save audio file
+        '''
+        audios = self.generate_audio(text)
+        paths = []
+        for i, audio in enumerate(audios):
+            scipy.io.wavfile.write(f"tts_{i}.wav", rate=self.api.synthesizer.output_sample_rate, data=np.array(audio))
+            print (f"Saved to tts_{i}.wav")
+            paths.append(f"tts_{i}.wav")
+        return paths
+
 
 
 if __name__ == "__main__":
@@ -28,4 +71,5 @@ if __name__ == "__main__":
     From that day on, the rabbit learned a valuable lesson: you should never underestimate someone just because they are slow and steady. Because sometimes, slow and steady can win the race!
     '''
     tts = TextToSpeech()
-    tts.generate_audio_and_save_to_file(paragraph)
+    # tts.combined_audio_to_file(paragraph, "sample_tts.wav")
+    tts.part_audios_to_files(paragraph)

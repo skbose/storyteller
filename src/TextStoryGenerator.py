@@ -38,6 +38,12 @@ class TextStoryGenerator:
         @param max_length: The maximum length of the generated text.
         @return: The generated text.
         '''
+        prompt = '''
+            SYSTEM: You are a helpful, respectful and honest assistant who tells stories to children.
+            USER: {prompt}
+            ASSISTANT:
+        '''.format(prompt=prompt)
+
         sequences = self.pipeline(
             prompt,
             do_sample=True,
@@ -47,12 +53,14 @@ class TextStoryGenerator:
             max_length=max_length,
         )
         generated_text = sequences[0]['generated_text']
+        assistant_index = generated_text.find('ASSISTANT:')
+        generated_text = generated_text[assistant_index + len('ASSISTANT:'):]
+
         return generated_text
 
 
 if __name__ == '__main__':
-    sample_prompt = '''
-    Write a story about a rabbit that won a race against a tortoise. Return the response in json format with `story` as the key.
+    sample_prompt = '''A moral story of a cow and goat.
     '''
     tsg = TextStoryGenerator()
     print(tsg.generate(sample_prompt))
