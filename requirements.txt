@@ -1,0 +1,5 @@
+tts
+accelerate
+pydub
+mecab-python
+unidic-lite

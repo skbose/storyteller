@@ -32,6 +32,14 @@ class BackgroundScoreGenerator:
         sampling_rate = self.model.config.audio_encoder.sampling_rate
         scipy.io.wavfile.write(filename, rate=sampling_rate, data=audio_values[0, 0].numpy())
 
+    def generate_and_save_to_file(self, prompt: str, filename: str):
+        '''
+        Generates a background score based on the prompt and saves it to a file.
+        @param prompt: The prompt to generate the background score from.
+        @param filename: The filename to save the audio values to.
+        '''
+        audio_values = self.generate(prompt)
+        self.save(audio_values, filename)
 
 if __name__ == '__main__':
     bsg = BackgroundScoreGenerator()
