@@ -8,7 +8,7 @@ Create a conda environment
 
 Install the python requirements using pip
 
-`pip install <repo_root>/requirements.txt`
+`pip install -r <repo_root>/requirements.txt`
 
 ## Usage
 To generate a story, think of a prompt and a background music you would like to hear.
