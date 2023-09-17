@@ -36,7 +36,7 @@ class TextStoryGenerator:
                 max_tokens=max_length
             )
 
-            return completion.choices[0].message
+            return completion.choices[0].message.content
 
 
 
