@@ -11,10 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 class AIStoryTeller():
+    OPEN_AI_KEY = "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"
+
     def __init__(self, wavs_dir) -> None:
         self.tts = TextToSpeech()
         self.bsg = BackgroundScoreGenerator()
-        self.tsg = TextStoryGenerator(model_name="gpt-3.5-turbo", key=None)
+        self.tsg = TextStoryGenerator(model_name="gpt-3.5-turbo", key=self.OPEN_AI_KEY)
         self.wavs_dir = wavs_dir
         
 

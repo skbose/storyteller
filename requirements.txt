@@ -3,3 +3,4 @@ tts
 openai
 pydub
 scipy
+flask
