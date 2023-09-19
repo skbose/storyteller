@@ -19,7 +19,7 @@ def generate_story():
         return "Bad Request", 400
     
     story_teller.tell_a_story(prompt, music)
-    path_to_file = "../wavs/final_Story.wav"
+    path_to_file = "../wavs/final_story.wav"
     
     return send_file(
          path_to_file, 
