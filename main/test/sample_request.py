@@ -1,6 +1,7 @@
 import requests
 
 url = "http://localhost:5000/generate_story"
+# url = "http://74.235.105.189:5000/generate_story"
 
 data = {
     "prompt": "Write a story about a lion and rabbit in 100 words.",
@@ -8,6 +9,7 @@ data = {
 }
 
 response = requests.post(url, json=data)
+print (response)
 
 if response.status_code == 200:
     with open("story.wav", "wb") as f:

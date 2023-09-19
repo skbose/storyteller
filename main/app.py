@@ -1,10 +1,14 @@
 from flask import Flask, request
 from flask import send_file
-from AIStoryTeller import AIStoryTeller
+from modules.AIStoryTeller import AIStoryTeller
+import os
 
 
 app = Flask(__name__)
-story_teller = AIStoryTeller(wavs_dir="../wavs/")
+
+OUTPUT_DIR = "/wavs/"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+story_teller = AIStoryTeller(wavs_dir=OUTPUT_DIR)
 
 
 @app.route("/generate_story", methods=['POST'])
@@ -19,7 +23,7 @@ def generate_story():
         return "Bad Request", 400
     
     story_teller.tell_a_story(prompt, music)
-    path_to_file = "../wavs/final_story.wav"
+    path_to_file = "/wavs/final_story.wav"
     
     return send_file(
          path_to_file, 
@@ -27,6 +31,3 @@ def generate_story():
          as_attachment=True, 
          download_name="story.wav")  
 
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)

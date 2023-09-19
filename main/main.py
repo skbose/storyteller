@@ -1,4 +1,4 @@
-from AIStoryTeller import AIStoryTeller
+from modules.AIStoryTeller import AIStoryTeller
 import argparse
 import os
 

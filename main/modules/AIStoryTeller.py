@@ -1,6 +1,6 @@
-from TextToSpeech import TextToSpeech
-from BackgroundScoreGenerator import BackgroundScoreGenerator
-from TextStoryGenerator import TextStoryGenerator
+from .TextToSpeech import TextToSpeech
+from .BackgroundScoreGenerator import BackgroundScoreGenerator
+from .TextStoryGenerator import TextStoryGenerator
 import logging
 from pydub import AudioSegment
 import os
