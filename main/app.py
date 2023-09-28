@@ -1,14 +1,26 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from flask import send_file
 from modules.AIStoryTeller import AIStoryTeller
 import os
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 
+CORS(app)
+
 OUTPUT_DIR = "/wavs/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 story_teller = AIStoryTeller(wavs_dir=OUTPUT_DIR)
+
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        res = Response()
+        res.headers['X-Content-Type-Options'] = '*'
+        res.headers['Access-Control-Allow-Origin'] = '*'
+        return res
 
 
 @app.route("/generate_story", methods=['POST'])
