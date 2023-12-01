@@ -4,3 +4,4 @@ openai
 pydub
 scipy
 flask
+gradio
