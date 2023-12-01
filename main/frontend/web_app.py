@@ -25,4 +25,5 @@ def generate_story(prompt, music):
 iface = gr.Interface(fn=generate_story, 
                      inputs=["text", "text"], 
                      outputs=gr.Audio(type="filepath", label="Story Audio"))
-iface.launch()
+
+iface.launch(share=True, server_name="0.0.0.0")
