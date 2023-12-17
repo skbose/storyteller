@@ -5,3 +5,5 @@ pydub
 scipy
 flask
 gradio
+ffmpeg
+ffprobe
