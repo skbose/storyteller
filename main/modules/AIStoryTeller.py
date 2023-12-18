@@ -1,9 +1,10 @@
-from .TextToSpeech import TextToSpeech
-from .BackgroundScoreGenerator import BackgroundScoreGenerator
-from .TextStoryGenerator import TextStoryGenerator
+from TextToSpeech import TextToSpeech
+from BackgroundScoreGenerator import BackgroundScoreGenerator
+from TextStoryGenerator import TextStoryGenerator
 import logging
 from pydub import AudioSegment
 import os
+from OpenAITTS import OpenAITTS
 
 
 logging.basicConfig(level=logging.INFO)
@@ -11,10 +12,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIStoryTeller():
-    OPEN_AI_KEY = "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"
+    OPEN_AI_KEY = "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"
 
     def __init__(self, wavs_dir) -> None:
-        self.tts = TextToSpeech()
+        self.tts = OpenAITTS(key=self.OPEN_AI_KEY)
         self.bsg = BackgroundScoreGenerator()
         self.tsg = TextStoryGenerator(model_name="gpt-3.5-turbo", key=self.OPEN_AI_KEY)
         self.wavs_dir = wavs_dir
@@ -24,7 +25,7 @@ class AIStoryTeller():
         story = self.tsg.generate(description)
         logger.info(story)
 
-        story_audio_path = os.path.join(self.wavs_dir, "story.wav")
+        story_audio_path = os.path.join(self.wavs_dir, "story.mp3")
         story_audio = self.tts.generate_audio_and_save_to_file(
             text=story, output_path=story_audio_path)
 
@@ -44,5 +45,5 @@ class AIStoryTeller():
 
 
 if __name__ == '__main__':
-    ai_story_teller = AIStoryTeller()
-    ai_story_teller.tell_a_story("Write a story about a lion and mouse in less than 100 words.", "happy piano for moral story")
+    ai_story_teller = AIStoryTeller(wavs_dir="./")
+    ai_story_teller.tell_a_story("Story about the lion and the mouse", "happy piano for moral story")
