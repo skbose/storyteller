@@ -1,10 +1,9 @@
-from TextToSpeech import TextToSpeech
-from BackgroundScoreGenerator import BackgroundScoreGenerator
-from TextStoryGenerator import TextStoryGenerator
+from .BackgroundScoreGenerator import BackgroundScoreGenerator
+from .TextStoryGenerator import TextStoryGenerator
 import logging
 from pydub import AudioSegment
 import os
-from OpenAITTS import OpenAITTS
+from .OpenAITTS import OpenAITTS
 
 
 logging.basicConfig(level=logging.INFO)
