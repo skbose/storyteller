@@ -35,7 +35,7 @@ class AIStoryTeller():
         story_audio = AudioSegment.from_file(story_audio_path)
         music_audio = AudioSegment.from_file(bg_music_path)
 
-        music_audio = music_audio.apply_gain(-15)
+        music_audio = music_audio.apply_gain(-18)
         overlayed_sound = story_audio.overlay(music_audio, loop=True)
 
         # save the result
@@ -46,4 +46,4 @@ class AIStoryTeller():
 
 if __name__ == '__main__':
     ai_story_teller = AIStoryTeller(wavs_dir="./")
-    ai_story_teller.tell_a_story("Story about the lion and the mouse", "happy piano for moral story")
+    ai_story_teller.tell_a_story("Story of the two friends", "soothing piano for background music")

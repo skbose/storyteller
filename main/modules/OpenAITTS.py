@@ -20,6 +20,9 @@ class OpenAITTS:
     """
     A class that uses OpenAI's Text-to-Speech (TTS) API to generate speech from text.
     """
+    MALE_OPENAI_VOICES = ['echo', 'fable']
+    FEMALE_OPENAI_VOICES = ['nova', 'shimmer']
+
     def __init__(self, key: str):
         """
         Initialize the OpenAI client with the provided API key.
@@ -37,12 +40,19 @@ class OpenAITTS:
         # read the character names and voices
         self.character_to_voice = {'narration': 'onyx'}
         voices = json_data.get('voices')
+        
+        male_idx = 0
+        female_idx = 0
+
+        # assign character voices
         for character_name in voices:
             voice = voices.get(character_name)
             if 'male' in voice:
-                self.character_to_voice[character_name] = 'alloy'
+                self.character_to_voice[character_name] = self.MALE_OPENAI_VOICES[male_idx]
+                male_idx = (male_idx + 1) % 2
             elif 'female' in voice:
-                self.character_to_voice[character_name] = 'shimmer'
+                self.character_to_voice[character_name] = self.FEMALE_OPENAI_VOICES[female_idx]
+                female_idx = (female_idx + 1) % 2
 
         story_text = re.sub(json_str, '', text)
         story_lines = story_text.split('\n')
@@ -86,6 +96,7 @@ class OpenAITTS:
         self._parse_text_input(text=text)
         
         audio_segments = []
+        print (self.parsed_story)
         for chunk in tqdm(self.parsed_story, total=len(self.parsed_story), desc="total lines"):
              # Generate speech for the line
             speech_file_path = f"tmp.mp3"
@@ -102,8 +113,13 @@ class OpenAITTS:
             audio_segment = AudioSegment.from_mp3(speech_file_path)
             audio_segments.append(audio_segment)
 
-        # Concatenate all audio segments into a single audio
-        combined_audio = sum(audio_segments)
+        # Create a one second silence audio segment
+        one_sec_silence = AudioSegment.silent(duration=500)  # duration in milliseconds
+
+        # Concatenate all audio segments with a one second delay between each
+        combined_audio = audio_segments[0]
+        for segment in audio_segments[1:]:
+            combined_audio += one_sec_silence + segment
 
         # Export the combined audio to a single mp3 file
         combined_audio.export(output_path, format="mp3")
@@ -118,7 +134,7 @@ if __name__ == '__main__':
 },
 "voices": {
     "Lakshman": "male",
-    "Chintu": "female"
+    "Chintu": "male"
 }
 }
 

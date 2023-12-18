@@ -1,13 +1,14 @@
-import openai
+from openai import OpenAI
 import json
 import os
 
-TEMPLATE_PROMPT = '''
-### Context ###
+
+CONTEXT = '''
 You are StoryGPT. Your job is to create short moral panchatantra stories for kids with age less than four.
+'''
 
+TEMPLATE_PROMPT = '''
 ### Instructions ###
-
 Start writing a story in a visual manner, like being written by a famous author. Tailor the story towards famous Indian folk tales like Panchatantra. You should also refrain from making the book too vulgar. The story should be in a conversational format following a template. The template comprises of the narration, and the dialogues of the different characters in double quotes. Each line should either begin with a narration or the character name inside <>. Each character should have an Indian name which signifies the traits of the character.
 
 Template:
@@ -25,6 +26,7 @@ Keep the language and plot easy to understand for young children.
 
 Human: Story of the cow and the lion
 
+AI:
 {
   "characters": {
     "Gopal": "The Kind Cow",
@@ -58,44 +60,37 @@ After that day, Gopal and Raj continued telling happy stories under the big tree
 Moral of the Story:
 "Being strong means using your heart and brain to help others and solve problems."
 
-'''
+Human: '''
 
 class TextStoryGenerator:
     '''
     A class that generates a story given a prompt and model.
     '''
 
-    def __init__(self, model_name="gpt-3.5-turbo", key=None):
+    def __init__(self, key, model_name="gpt-3.5-turbo"):
         
-        self.model = None
         self.model_name = model_name
         if(model_name.startswith("gpt-3.5-turbo")):
             if(key == None):
                 raise Exception("Open AI key is required.")
-            openai.api_key=key
-            self.model = openai.ChatCompletion()
-        # Default is chatGPT
-        else:
-            self.model = openai.ChatCompletion()
+            self.client = OpenAI(api_key=key)
 
-    def generate(self, prompt, max_length=200, num_return_sequences=1, temperature=None):
+    def generate(self, prompt):
         if(prompt==""):
             return "Please provide the prompt."
+        print (prompt)
         if(self.model_name.startswith("gpt-3.5-turbo")):
-            if(temperature == None):
-                temperature = 1
-            completion = self.model.create(
+            completion = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[
-                    {"role": "system", "content": prompt}
-                ],
-                temperature=temperature,
-                n=num_return_sequences,
-                max_tokens=max_length
+                    {"role": "system", "content": CONTEXT},
+                    {"role": "user", "content": TEMPLATE_PROMPT + prompt + '\nAI:'}
+                ]
             )
-
             return completion.choices[0].message.content
 
-
-
         return "Model name is not correct."    
+
+if __name__ == "__main__":
+    tts = TextStoryGenerator(key="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")
+    print (tts.generate(prompt='The story of a lion and the tiger'))
