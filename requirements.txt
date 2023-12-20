@@ -1,0 +1,9 @@
+transformers
+tts
+openai
+pydub
+scipy
+flask
+gradio
+ffmpeg
+ffprobe
