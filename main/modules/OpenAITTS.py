@@ -26,12 +26,17 @@ class OpenAITTS:
     def __init__(self, key: str):
         """
         Initialize the OpenAI client with the provided API key.
+        
+        :param key: The API key for accessing the OpenAI TTS API.
         """
         self.client = OpenAI(api_key=key)
 
     def _parse_text_input(self, text: str) -> list[StoryChunk]:
         """
         Parse the input text, extracting character voices and story lines.
+        
+        :param text: The input text containing the story and character voices.
+        :return: A list of StoryChunk objects representing the parsed story.
         """
         # parse the json string present in the header
         json_str = re.search(r'\{(.+?)\}\n}', text, re.DOTALL).group(0)
@@ -80,6 +85,13 @@ class OpenAITTS:
     def generate_speech(self, client: OpenAI, model: str, voice: str, text: str, speed: float, output_path: str) -> None:
         """
         Generate speech from text using the OpenAI API and save it to a file.
+        
+        :param client: The OpenAI client for making the API request.
+        :param model: The model to be used for generating the speech.
+        :param voice: The voice to be used for the speech generation.
+        :param text: The input text for generating the speech.
+        :param speed: The speed at which the speech should be generated.
+        :param output_path: The file path where the generated speech should be saved.
         """
         response = client.audio.speech.create(
             model=model,
@@ -92,6 +104,9 @@ class OpenAITTS:
     def generate_audio_and_save_to_file(self, text: str, output_path: str) -> None:
         """
         Generate audio from text and save it to a file.
+        
+        :param text: The input text for generating the audio.
+        :param output_path: The file path where the generated audio should be saved.
         """
         self._parse_text_input(text=text)
         
